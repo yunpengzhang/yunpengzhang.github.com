@@ -1,0 +1,49 @@
+---
+author: illidan
+comments: true
+date: 2011-10-21 03:55:33+00:00
+layout: post
+slug: '%e7%a1%ac%e4%bb%b6%e7%9b%b8%e5%85%b3%e7%9a%84%e5%ae%89%e5%85%a8%e9%9a%8f%e6%9c%ba%e6%95%b0%ef%bc%9adevrandom%e5%92%8cdevurandom'
+title: '硬件相关的安全随机数：/dev/random和/dev/urandom '
+wordpress_id: 202
+categories:
+- 开发运营
+tags:
+- random
+- urandom
+---
+
+<div><span style="font-family: 'Times New Roman'">rand()函数只要种子相同，生成的随机队列就是固定的。虽然我们常用系统时间当作种子，以保证不同时刻生成的随机队列是不同的。但是这种随机队列有个弊端：一旦猜中种子，就可以知道过去、现在和未来的随机数是什么，从而很容易被破解。</span></div>
+<span style="font-family: 'Times New Roman'"> </span>
+
+<span style="font-family: 'Times New Roman'">The  character  special  files /dev/random and /dev/urandom (present since Linux 1.3.30) provide an interface to the kernel's random number generator.</span>
+
+<span style="font-family: 'Times New Roman'">/dev/random和/dev/urandom是根据机器硬件的一些动态值生成的随机字符串文件（The  random number generator gathers environmental noise from device drivers and other sources into an entropy pool.），比较难破解。</span>
+
+<span style="font-family: 'Times New Roman'"> </span>
+
+<span style="font-family: 'Times New Roman'">/dev/urandom生成的速度比/dev/random快。如果不能立即生成随机串，/dev/random会一直阻塞，有时会非常耗费CPU；/dev/urandom则会根据其他值立即生成一个随机串，不会阻塞。/dev/urandom生成的随机值没有/dev/random随机。大多数情况下，我们选用/dev/urandom。</span>
+<!--more-->
+<span style="font-family: 'Times New Roman'"> </span>
+
+<span style="font-family: 'Times New Roman'">获取urandom buf的例子：</span>
+<code>	int GetURandBuf(char * sBuf, int iLen)
+	{
+	        static int iFd = -1; //这个的好处是不用每次都open
+	        if (0 &gt; iFd)
+	        {
+	                iFd = open("/dev/urandom", O_RDONLY);
+	                if(0 &gt; iFd)
+	                {
+	                        return -1;
+	                }
+	        }
+	        if(read(iFd, sBuf, iLen) != iLen)
+	        {
+	                close(iFd);
+	                iFd = -1;
+	                return -1;
+	        }
+	        return 0;
+	}</code>
+<span style="font-family: 'Times New Roman'">取到随机buf后如何再利用这个buf做其他花样就随意了。</span>

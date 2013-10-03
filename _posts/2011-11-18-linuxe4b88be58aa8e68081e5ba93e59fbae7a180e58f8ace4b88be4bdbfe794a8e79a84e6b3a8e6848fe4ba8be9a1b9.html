@@ -1,0 +1,159 @@
+---
+author: illidan
+comments: true
+date: 2011-11-18 09:41:54+00:00
+layout: post
+slug: linux%e4%b8%8b%e5%8a%a8%e6%80%81%e5%ba%93%e5%9f%ba%e7%a1%80%e5%8f%8ac%e4%b8%8b%e4%bd%bf%e7%94%a8%e7%9a%84%e6%b3%a8%e6%84%8f%e4%ba%8b%e9%a1%b9
+title: linux下动态库基础及C++下使用的注意事项
+wordpress_id: 274
+categories:
+- 开发知识
+---
+
+<div><span style="font-family: 'Times New Roman'"> <span class="Apple-style-span" style="line-height: 19px;font-size: 13px;font-weight: bold">【图】</span></span></div>
+<p style="margin: 0in"><span style="font-family: 'Times New Roman'"><img src="http://top.oa.com/pictures/201109/1315544326_71.png" alt="" /></span></p>
+<p style="margin: 0in;font-size: 10pt;font-weight: bold"><span style="font-family: 'Times New Roman'"> </span></p>
+<p style="margin: 0in;font-size: 10pt;font-weight: bold"><span style="font-family: 'Times New Roman'">【生成动态库】</span></p>
+<p style="margin: 0in;font-size: 10pt"><span style="font-family: 'Times New Roman'">lib0x513pb.so: plugin_0x513.cpp oidb_0x513._0x513.pb.cc</span></p>
+<p style="margin: 0in;font-size: 10pt"><span style="font-family: 'Times New Roman'"><span>        </span>${CC} ${GPB_INC} $^ <span style="color: blue">-fPIC -shared -o</span> $@ ${GPB_LIB}</span></p>
+<p style="margin: 0in;font-size: 10pt"><span style="font-family: 'Times New Roman'"> </span></p>
+<p style="margin: 0in;font-size: 10pt;font-weight: bold"><span style="font-family: 'Times New Roman'">【注册动态库路径】</span></p>
+<p style="margin: 0in;font-size: 10pt"><span style="font-family: 'Times New Roman'"><span lang="zh-CN">添加动态库所在</span><span lang="en-US">path</span><span lang="zh-CN">到</span><span style="color: blue" lang="zh-CN">/etc/ld.so.conf</span></span></p>
+<p style="margin: 0in;font-size: 10pt"><span style="font-family: 'Times New Roman'">运行<span style="color: blue">/sbin/ldconfig</span>令配置生效。</span></p>
+<p style="margin: 0in;font-size: 10pt"><span style="font-family: 'Times New Roman'"> </span></p>
+<p style="margin: 0in;font-size: 10pt;font-weight: bold"><span style="font-family: 'Times New Roman'">【使用动态库】</span></p>
+<p style="margin: 0in;font-size: 10pt"><span style="font-family: 'Times New Roman'">tdb_now_demo: tdb_now_demo.cpp</span></p>
+<p style="margin: 0in 0in 0in 0.375in;font-size: 10pt"><span style="font-family: 'Times New Roman'">${CC} ${GPB_INC} -rdynamic -o $@ $^ ${GPB_LIB} <span style="color: blue">-L. -l</span>0x513pb</span></p>
+<p style="margin: 0in;font-size: 10pt"><span style="font-family: 'Times New Roman'">——直接链接。修改动态库后，需要重启tdb_now_demo加载动态库，程序不会自动加载。</span></p>
+<p style="margin: 0in;font-size: 10pt"><span style="font-family: 'Times New Roman'"> </span></p>
+<p style="margin: 0in;font-size: 10pt"><span style="font-family: 'Times New Roman'">tdb_now_demo: tdb_now_demo.cpp</span></p>
+<p style="margin: 0in 0in 0in 0.375in;font-size: 10pt"><span style="font-family: 'Times New Roman'">${CC} ${GPB_INC} -rdynamic -o $@ $^ ${GPB_LIB} <span style="color: blue">-ldl</span></span></p>
+<p style="margin: 0in;font-size: 10pt"><span style="font-family: 'Times New Roman'"><span lang="zh-CN">——配合</span><span lang="en-US">dlopen()</span><span lang="zh-CN">等函数。修改动态库后，程序可以自动检测并加载，不需要重启。</span></span></p>
+<p style="margin: 0in;font-size: 10pt"><span style="font-family: 'Times New Roman'"> </span></p>
+<p style="margin: 0in;font-size: 10pt;font-weight: bold"><span style="font-family: 'Times New Roman'"><span lang="zh-CN">【</span><span lang="en-US">dlopen</span><span lang="zh-CN">的使用】</span></span></p>
+<p style="margin: 0in;color: black;font-size: 10pt;font-weight: bold"><span style="font-family: 'Times New Roman'"><span> </span>Dl API</span></p>
+
+<div style="direction: ltr">
+<table style="border-collapse: collapse;direction: ltr;border: #a3a3a3 1pt solid" border="1" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td style="width: 0.667in;vertical-align: top;border: #a3a3a3 1pt solid;padding: 4pt">
+<p style="margin: 0in;color: black;font-size: 10pt;font-weight: bold"><span style="font-family: 'Times New Roman'">函数</span></p>
+</td>
+<td style="width: 3.393in;vertical-align: top;border: #a3a3a3 1pt solid;padding: 4pt">
+<p style="margin: 0in;color: black;font-size: 10pt;font-weight: bold"><span style="font-family: 'Times New Roman'">描述</span></p>
+</td>
+</tr>
+<tr>
+<td style="width: 0.667in;vertical-align: top;border: #a3a3a3 1pt solid;padding: 4pt">
+<p style="margin: 0in;color: black;font-size: 10pt;font-weight: bold"><span style="font-family: 'Times New Roman'">dlopen</span></p>
+</td>
+<td style="width: 3.393in;vertical-align: top;border: #a3a3a3 1pt solid;padding: 4pt">
+<p style="margin: 0in;color: black;font-size: 10pt"><span style="font-family: 'Times New Roman'">使对象文件可被程序访问</span></p>
+</td>
+</tr>
+<tr>
+<td style="width: 0.667in;vertical-align: top;border: #a3a3a3 1pt solid;padding: 4pt">
+<p style="margin: 0in;color: black;font-size: 10pt;font-weight: bold"><span style="font-family: 'Times New Roman'">dlsym</span></p>
+</td>
+<td style="width: 3.393in;vertical-align: top;border: #a3a3a3 1pt solid;padding: 4pt">
+<p style="margin: 0in;color: black;font-size: 10pt"><span style="font-family: 'Times New Roman'">获取执行了 dlopen 函数的对象文件中的符号的地址</span></p>
+</td>
+</tr>
+<tr>
+<td style="width: 0.667in;vertical-align: top;border: #a3a3a3 1pt solid;padding: 4pt">
+<p style="margin: 0in;color: black;font-size: 10pt;font-weight: bold"><span style="font-family: 'Times New Roman'">dlerror</span></p>
+</td>
+<td style="width: 3.393in;vertical-align: top;border: #a3a3a3 1pt solid;padding: 4pt">
+<p style="margin: 0in;color: black;font-size: 10pt"><span style="font-family: 'Times New Roman'">返回上一次出现错误的字符串错误</span></p>
+</td>
+</tr>
+<tr>
+<td style="width: 0.667in;vertical-align: top;border: #a3a3a3 1pt solid;padding: 4pt">
+<p style="margin: 0in;color: black;font-size: 10pt;font-weight: bold"><span style="font-family: 'Times New Roman'">dlclose</span></p>
+</td>
+<td style="width: 3.393in;vertical-align: top;border: #a3a3a3 1pt solid;padding: 4pt">
+<p style="margin: 0in;color: black;font-size: 10pt"><span style="font-family: 'Times New Roman'">关闭目标文件</span></p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p style="margin: 0in;font-size: 10pt"><span style="font-family: 'Times New Roman'"><span style="color: black">该过程首先是调用 dlopen，提供要访问的文件对象和模式。调用 dlopen 的结果是稍候要使用的对象的句柄。</span><span style="color: blue">mode 参数通知动态链接器何时执行再定位。有两个可能的值。第一个是 RTLD_NOW，它表明动态链接器将会在调用 dlopen 时完成所有必要的再定位。第二个可选的模式是 RTLD_LAZY，它只在需要时执行再定位。</span><span style="color: black">这是通过在内部使用动态链接器重定向所有尚未再定位的请求来完成的。这样，动态链接器就能够在请求时知晓何时发生了新的引用，而且再定位可以正常进行。后面的调用无需重复再定位过程。</span></span></p>
+<p style="margin: 0in;color: black;font-size: 10pt"><span style="font-family: 'Times New Roman'">还可以选择另外两种模式，它们可以按位 OR 到 mode 参数中。RTLD_LOCAL 表明其他任何对象都无法使加载的共享对象的符号用于再定位过程。如果这正是您想要的的话（例如，为了让共享的对象能够调用原始进程映像中的符号），那就使用 RTLD_GLOBAL 吧。</span></p>
+<p style="margin: 0in;color: black;font-size: 10pt"><span style="font-family: 'Times New Roman'">dlopen 函数还会自动解析共享库中的依赖项。这样，如果您打开了一个依赖于其他共享库的对象，它就会自动加载它们。函数返回一个句柄，该句柄用于后续的 API 调用。dlopen 的原型为：</span></p>
+<p style="margin: 0in;font-size: 10pt"><span style="font-family: 'Times New Roman'"><span style="color: blue">#include &lt;dlfcn.h&gt;</span><span style="color: black">
+</span><span style="color: blue">void *</span><span style="color: blue;font-weight: bold">dlopen</span><span style="color: blue">( const char *file, int mode );</span></span></p>
+<p style="margin: 0in;color: black;font-size: 10pt"><span style="font-family: 'Times New Roman'">有了 ELF 对象的句柄，就可以通过调用 dlsym 来识别这个对象内的符号的地址了。该函数采用一个符号名称，如对象内的一个函数的名称。返回值为对象符号的解析地址：</span></p>
+<p style="margin: 0in;color: blue;font-size: 10pt"><span style="font-family: 'Times New Roman'">void *<span style="font-weight: bold">dlsym</span>( void *restrict handle, const char *restrict name );</span></p>
+<p style="margin: 0in;color: black;font-size: 10pt"><span style="font-family: 'Times New Roman'">如果调用该 API 时发生了错误，可以使用 dlerror 函数返回一个表示此错误的人类可读的字符串。该函数没有参数，它会在发生前面的错误时返回一个字符串，在没有错误发生时返回 NULL：</span></p>
+<p style="margin: 0in;color: blue;font-size: 10pt"><span style="font-family: 'Times New Roman'">char *<span style="font-weight: bold">dlerror</span>();</span></p>
+<p style="margin: 0in;color: black;font-size: 10pt"><span style="font-family: 'Times New Roman'">最后，如果无需再调用共享对象的话，应用程序可以调用 dlclose 来通知操作系统不再需要句柄和对象引用了。它完全是按引用来计数的，所以同一个共享对象的多个用户相互间不会发生冲突（只要还有一个用户在使用它，它就会待在内存中）。任何通过已关闭的对象的 dlsym 解析的符号都将不再可用。</span></p>
+<p style="margin: 0in;font-size: 10pt"><span style="font-family: 'Times New Roman'"><span style="color: blue">char *</span><span style="color: blue;font-weight: bold">dlclose</span><span style="color: blue">( void *handle );</span></span></p>
+void invoke_method( char *lib, char *method, float argument )
+{
+void *dl_handle;
+float (*func)(float);
+char *error;
+
+/* Open the shared object */
+dl_handle = dlopen( lib, RTLD_LAZY );
+if (!dl_handle) {
+printf( "!!! %s\n", dlerror() );
+return;
+}
+
+/* Resolve the symbol (method) from the object */
+func = dlsym( dl_handle, method );
+error = dlerror();
+if (error != NULL) {
+printf( "!!! %s\n", error );
+return;
+}
+
+/* Call the resolved method and print the result */
+printf(" %f\n", (*func)(argument) );
+
+/* Close the object */
+dlclose( dl_handle );
+
+return;
+}
+
+int main( int argc, char *argv[] )
+{
+char line[MAX_STRING+1];
+char lib[MAX_STRING+1];
+char method[MAX_STRING+1];
+float argument;
+
+while (1) {
+
+printf("&gt; ");
+
+line[0]=0;
+fgets( line, MAX_STRING, stdin);
+
+if (!strncmp(line, "bye", 3)) break;
+
+sscanf( line, "%s %s %f", lib, method, &amp;argument);
+
+invoke_method( lib, method, argument );
+
+}
+
+}
+<p style="margin: 0in;font-size: 10pt;font-weight: bold"><span style="font-family: 'Times New Roman'"><span lang="zh-CN">【</span><span lang="en-US">c++</span><span lang="zh-CN">使用动态库的注意事项】</span></span></p>
+<p style="margin: 0in;color: black;font-size: 10pt"><span style="font-family: 'Times New Roman'">动态库的头文件.h中需要使用</span></p>
+<p style="margin: 0in;font-size: 10pt"><span style="font-family: 'Times New Roman'"><span style="color: #7f0055;font-weight: bold">#ifdef</span><span style="color: black"> __cplusplus</span></span></p>
+<p style="margin: 0in;font-size: 10pt"><span style="font-family: 'Times New Roman'"><span style="color: #7f0055;font-weight: bold">extern</span><span style="color: black"> </span><span style="color: #2a00ff">"C"</span><span style="color: black">{</span></span></p>
+<p style="margin: 0in;color: #7f0055;font-size: 10pt;font-weight: bold"><span style="font-family: 'Times New Roman'">#endif</span></p>
+<p style="margin: 0in;font-size: 10pt"><span style="font-family: 'Times New Roman'"> </span></p>
+<p style="margin: 0in;color: #7f0055;font-size: 10pt;font-weight: bold"><span style="font-family: 'Times New Roman'">......</span></p>
+<p style="margin: 0in;font-size: 10pt"><span style="font-family: 'Times New Roman'"> </span></p>
+<p style="margin: 0in;font-size: 10pt"><span style="font-family: 'Times New Roman'"><span style="color: #7f0055;font-weight: bold">#ifdef</span><span style="color: black"> __cplusplus</span></span></p>
+<p style="margin: 0in;color: black;font-size: 10pt"><span style="font-family: 'Times New Roman'">}</span></p>
+<p style="margin: 0in;color: #7f0055;font-size: 10pt;font-weight: bold"><span style="font-family: 'Times New Roman'">#endif</span></p>
+<p style="margin: 0in;font-size: 10pt"><span style="font-family: 'Times New Roman'"> </span></p>
+<p style="margin: 0in;color: blue;font-size: 10pt"><span style="font-family: 'Times New Roman'">void *<span style="font-weight: bold">dlsym</span>( void *restrict handle, const char *restrict name );</span></p>
+<p style="margin: 0in;font-size: 10pt"><span style="font-family: 'Times New Roman'"><span style="color: #993300" lang="zh-CN">C＋+有Name Mangling机制。</span><span style="color: black" lang="zh-CN">用g++编译的库文件，自然的运用了Name Mangling技术，</span><span style="color: #993300" lang="zh-CN">原本的getdate(DateType&amp; d)函数，很有可能其名字已变成了_getdate_DateType(DateType&amp; d)（以支持多态，不同的编译器实现不一样）</span><span style="color: black" lang="zh-CN">，</span><span style="color: black" lang="en-US">dlsym</span><span style="color: black" lang="zh-CN">发现查找不到指定的函数名，运行的时候就会报错。</span></span></p>

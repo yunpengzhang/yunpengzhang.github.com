@@ -1,0 +1,57 @@
+---
+author: illidan
+comments: true
+date: 2011-11-18 09:25:00+00:00
+layout: post
+slug: '%e5%87%bd%e6%95%b0%e8%b0%83%e7%94%a8%e7%9a%84%e5%a0%86%e6%a0%88-2'
+title: 函数调用的堆栈
+wordpress_id: 264
+categories:
+- 开发运营
+---
+
+<div><font face="Arial">&nbsp;<span class="Apple-style-span" style="font-size:13px;line-height:19px">&nbsp;</span></font></div>
+
+<p style="margin:0in"><font face="Arial"><img src="http://top.oa.com/pictures/201111/1321440763_94.png" alt="1321440763_94.png"></font></p>
+
+<p style="margin-top:0in;margin-right:0in;margin-bottom:0in;margin-left:0in;font-size:10pt"><font face="Arial">&nbsp;</font></p>
+
+<p style="margin:0in"><font face="Arial"><img src="http://top.oa.com/pictures/201111/1321440772_19.png" alt="1321440772_19.png"></font></p>
+
+<p style="margin-top:0in;margin-right:0in;margin-bottom:0in;margin-left:0in;font-size:10pt"><font face="Arial">&nbsp;</font></p>
+
+<p style="margin:0in"><font face="Arial"><img src="http://top.oa.com/pictures/201111/1321440780_29.png" alt="1321440780_29.png"></font></p>
+
+<p style="margin-top:0in;margin-right:0in;margin-bottom:0in;margin-left:0in;font-size:10pt"><font face="Arial">&nbsp;</font></p>
+
+<p style="margin-top:0in;margin-right:0in;margin-bottom:0in;margin-left:0in;font-size:10pt"><font face="Arial">首先我们来看一下显示调用栈所依据的原理。每个线程都有一个栈结构，用来记录函数的调用过程，这个栈是由高地址向低地址增长的，即栈底的地址比栈顶的地址大。<span style="color:#800000">ESP寄存器的值是栈顶的地址，通过增加或减小ESP的值可以缩减或扩大栈的大小。</span>现在我们再来详细地看看这个过程：</font></p>
+
+<p style="margin-top:0in;margin-right:0in;margin-bottom:0in;margin-left:0in;font-size:10pt"><font face="Arial">①在栈上压入参数。</font></p>
+
+<p style="margin-top:0in;margin-right:0in;margin-bottom:0in;margin-left:0in;font-size:10pt"><font face="Arial">②执行CALL指令，在栈上压入函数的返回地址。</font></p>
+
+<p style="margin-top:0in;margin-right:0in;margin-bottom:0in;margin-left:0in;font-size:10pt"><font face="Arial"><span style="color:#008080" lang="zh-cn">③压入EBP寄存器的值。</span><span style="color:#99CC00" lang="zh-cn">（上一层函数的</span><span style="color:#99CC00" lang="en-us">"</span><span style="color:#99CC00" lang="zh-cn">栈帧</span><span style="color:#99CC00" lang="en-us">"&lt;</span><span style="color:#99CC00" lang="zh-cn">每个函数在栈上都会保存有一个EBP值，标志了一个函数调用的开始，这就像分界线一样，将每个函数调用区分开来</span><span style="color:#99CC00" lang="en-us">&gt;</span><span style="color:#99CC00" lang="zh-cn">压栈）</span></font></p>
+
+<p style="margin-top:0in;margin-right:0in;margin-bottom:0in;margin-left:0in;font-size:10pt"><font face="Arial"><span lang="zh-cn">④</span><span style="color:#800000" lang="zh-cn">将ESP寄存器的值赋给EBP寄存器。</span><span style="color:#99CC00" lang="zh-cn">（本函数的开始地址</span><span style="color:#99CC00" lang="en-us">&lt;ESP</span><span style="color:#99CC00" lang="zh-cn">是当前栈顶的位置</span><span style="color:#99CC00" lang="en-us">&gt;</span><span style="color:#99CC00" lang="zh-cn">赋值给</span><span style="color:#99CC00" lang="en-us">EBP</span><span style="color:#99CC00" lang="zh-cn">，在这个函数结束之前，</span><span style="color:#99CC00" lang="en-us">EBP</span><span style="color:#99CC00" lang="zh-cn">都存储着这个函数的开始地址）</span></font></p>
+
+<p style="margin-top:0in;margin-right:0in;margin-bottom:0in;margin-left:0in;font-size:10pt"><font face="Arial">⑤减小ESP寄存器的值，为局部变量分配空间。</font></p>
+
+<p style="margin-top:0in;margin-right:0in;margin-bottom:0in;margin-left:0in;font-size:10pt"><font face="Arial">⑥执行函数代码。</font></p>
+
+<p style="margin-top:0in;margin-right:0in;margin-bottom:0in;margin-left:0in;font-size:10pt"><font face="Arial">⑦<span style="color:#800000">将EBP寄存器的值赋给ESP寄存器，等于回收了局部变量的空间。</span></font></p>
+
+<p style="margin-top:0in;margin-right:0in;margin-bottom:0in;margin-left:0in;font-size:10pt;color:#008080"><font face="Arial">⑧弹出栈顶的值，赋给EBP，即将第③步中压入的值重新赋给EBP。</font></p>
+
+<p style="margin-top:0in;margin-right:0in;margin-bottom:0in;margin-left:0in;font-size:10pt"><font face="Arial">⑨执行RET指令，弹出栈顶的返回地址。如果被调用函数负责回收参数的空间，则需要增加ESP的值。</font></p>
+
+<p style="margin-top:0in;margin-right:0in;margin-bottom:0in;margin-left:0in;font-size:10pt"><font face="Arial">&nbsp;&nbsp;</font></p>
+
+<p style="margin-top:0in;margin-right:0in;margin-bottom:0in;margin-left:0in;font-size:10pt"><font face="Arial">函数调用过程的第③步和第④步使得各个压入的EBP值形成了一个链表的结构，而EBP寄存器是链表的表头，如下图所示：</font></p>
+
+<p style="margin:0in"><font face="Arial"><img src="http://top.oa.com/pictures/201111/1321440793_97.png" alt="1321440793_97.png"></font></p>
+
+<p style="margin-top:0in;margin-right:0in;margin-bottom:0in;margin-left:0in;font-size:10pt"><font face="Arial">正是这种链表结构的存在，使得获取函数调用栈成为可能。只要从EBP寄存器开始，沿着链表层层往上，就可以得到函数调用的轨迹。</font></p>
+
+<p style="margin-top:0in;margin-right:0in;margin-bottom:0in;margin-left:0in;font-size:10pt"><font face="Arial">&nbsp;</font></p>
+
+<p style="margin-top:0in;margin-right:0in;margin-bottom:0in;margin-left:0in;font-size:10pt"><font face="Arial">由于EBP在当前函数调用中的不变性，调试版的程序都使用EBP作为变量和参数的基址，将EBP的值与一个偏移值相加就可以得到变量或参数的地址。有些发行版的程序会对函数的调用过程进行优化，省略了压入EBP的步骤，因此不能再使用EBP作为变量和参数的基址，也不能使用EBP链表来获取函数调用栈。</font></p><p style="margin-top:0in;margin-right:0in;margin-bottom:0in;margin-left:0in;font-size:10pt"><font face="Arial"><br></font></p><p style="margin-top:0in;margin-right:0in;margin-bottom:0in;margin-left:0in"><font color="#0000ff" face="Arial" size="1">（这篇不是原创，是贴了3篇文章的一部分，自己也写了几句话。一边查找信息一边粘贴，引用的文章已经找不到了——态度很不严谨，以后注意~~）</font></p>

@@ -1,0 +1,146 @@
+---
+author: illidan
+comments: true
+date: 2011-11-18 09:52:25+00:00
+layout: post
+slug: '%e5%85%b3%e4%ba%8e%e7%bc%96%e8%af%91%e5%99%a8%e9%93%be%e6%8e%a5%e9%9d%99%e6%80%81%e5%ba%93%e7%9a%84%e4%b8%80%e4%ba%9b%e7%89%b9%e6%80%a7'
+title: 关于编译器链接静态库的一些特性
+wordpress_id: 279
+categories:
+- 开发知识
+---
+
+<div><span class="Apple-style-span" style="font-size: 13px;line-height: 19px"><span style="font-family: 'Times New Roman'">有这样一个工程目录：</span></span></div>
+<p style="font-size: 10pt;color: blue;margin: 0in" lang="en-US"><span style="font-family: 'Times New Roman'">-test/</span></p>
+<p style="margin-top: 0in;margin-right: 0in;margin-bottom: 0in;margin-left: 0.375in;font-size: 10pt;color: blue" lang="en-US"><span style="font-family: 'Times New Roman'">-dir1/</span></p>
+<p style="margin-top: 0in;margin-right: 0in;margin-bottom: 0in;margin-left: 0.75in;font-size: 10pt" lang="en-US"><span style="font-family: 'Times New Roman'">libtest.a</span></p>
+<p style="margin-top: 0in;margin-right: 0in;margin-bottom: 0in;margin-left: 0.75in;font-size: 10pt" lang="en-US"><span style="font-family: 'Times New Roman'">test.cpp</span></p>
+<p style="margin-top: 0in;margin-right: 0in;margin-bottom: 0in;margin-left: 0.75in;font-size: 10pt" lang="en-US"><span style="font-family: 'Times New Roman'">test.h</span></p>
+<p style="margin-top: 0in;margin-right: 0in;margin-bottom: 0in;margin-left: 0.75in;font-size: 10pt" lang="en-US"><span style="font-family: 'Times New Roman'">test.o</span></p>
+<p style="margin-top: 0in;margin-right: 0in;margin-bottom: 0in;margin-left: 0.375in;font-size: 10pt;color: blue" lang="en-US"><span style="font-family: 'Times New Roman'">-dir2/</span></p>
+<p style="margin-top: 0in;margin-right: 0in;margin-bottom: 0in;margin-left: 0.75in;font-size: 10pt" lang="en-US"><span style="font-family: 'Times New Roman'">libtest.a</span></p>
+<p style="margin-top: 0in;margin-right: 0in;margin-bottom: 0in;margin-left: 0.75in;font-size: 10pt" lang="en-US"><span style="font-family: 'Times New Roman'">test.cpp</span></p>
+<p style="margin-top: 0in;margin-right: 0in;margin-bottom: 0in;margin-left: 0.75in;font-size: 10pt" lang="en-US"><span style="font-family: 'Times New Roman'">test.h</span></p>
+<p style="margin-top: 0in;margin-right: 0in;margin-bottom: 0in;margin-left: 0.75in;font-size: 10pt" lang="en-US"><span style="font-family: 'Times New Roman'">test.o</span></p>
+<p style="margin-top: 0in;margin-right: 0in;margin-bottom: 0in;margin-left: 0.375in;font-size: 10pt" lang="en-US"><span style="font-family: 'Times New Roman'">main.cpp</span></p>
+<p style="margin-top: 0in;margin-right: 0in;margin-bottom: 0in;margin-left: 0.375in;font-size: 10pt" lang="en-US"><span style="font-family: 'Times New Roman'">Makefile</span></p>
+<p style="font-size: 10pt;margin: 0in" lang="en-US"><span style="font-family: 'Times New Roman'"> </span></p>
+<p style="margin: 0in;font-size: 10.0pt"><span style="font-family: 'Times New Roman'"><span lang="zh-CN">其中，</span><span lang="en-US">dir1</span><span lang="zh-CN">的</span><span lang="en-US">test.cpp</span><span lang="zh-CN">和</span><span lang="en-US">test.h</span><span lang="zh-CN">中定义了</span><span lang="en-US">func_a</span><span lang="zh-CN">和</span><span lang="en-US">func_b</span><span lang="zh-CN">：</span></span></p>
+
+<div style="direction: ltr">
+<table style="direction: ltr;border-collapse: collapse;border-style: solid;border-color: #A3A3A3;border-width: 1pt" border="1" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td style="border-style: solid;border-color: #A3A3A3;border-width: 1pt;vertical-align: top;width: 1.5763in;padding: 4pt 4pt 4pt 4pt">
+<p style="font-size: 10pt;margin: 0in" lang="en-US"><span style="font-family: 'Times New Roman'">#include &lt;iostream&gt;</span></p>
+<p style="font-size: 10pt;margin: 0in" lang="en-US"><span style="font-family: 'Times New Roman'">using namespace std;</span></p>
+<p style="font-size: 10pt;margin: 0in" lang="en-US"><span style="font-family: 'Times New Roman'"> </span></p>
+<p style="font-size: 10pt;margin: 0in" lang="en-US"><span style="font-family: 'Times New Roman'">#include "test.h"</span></p>
+<p style="font-size: 10pt;margin: 0in" lang="en-US"><span style="font-family: 'Times New Roman'"> </span></p>
+<p style="font-size: 10pt;margin: 0in" lang="en-US"><span style="font-family: 'Times New Roman'">void <span style="font-weight: bold">func_a</span>(void)</span></p>
+<p style="font-size: 10pt;margin: 0in" lang="en-US"><span style="font-family: 'Times New Roman'">{</span></p>
+<p style="font-size: 10pt;margin: 0in" lang="en-US"><span style="font-family: 'Times New Roman'">cout &lt;&lt; "a" &lt;&lt; endl;</span></p>
+<p style="font-size: 10pt;margin: 0in" lang="en-US"><span style="font-family: 'Times New Roman'">}</span></p>
+<p style="font-size: 10pt;margin: 0in" lang="en-US"><span style="font-family: 'Times New Roman'"> </span></p>
+<p style="font-size: 10pt;margin: 0in" lang="en-US"><span style="font-family: 'Times New Roman'">void <span style="font-weight: bold">func_b</span>(void)</span></p>
+<p style="font-size: 10pt;margin: 0in" lang="en-US"><span style="font-family: 'Times New Roman'">{</span></p>
+<p style="font-size: 10pt;margin: 0in" lang="en-US"><span style="font-family: 'Times New Roman'">cout &lt;&lt; "b" &lt;&lt; endl;</span></p>
+<p style="font-size: 10pt;margin: 0in" lang="en-US"><span style="font-family: 'Times New Roman'">}</span></p>
+</td>
+<td style="border-style: solid;border-color: #A3A3A3;border-width: 1pt;vertical-align: top;width: 1.3388in;padding: 4pt 4pt 4pt 4pt">
+<p style="font-size: 10pt;margin: 0in" lang="en-US"><span style="font-family: 'Times New Roman'">#pragma once</span></p>
+<p style="font-size: 10pt;margin: 0in" lang="en-US"><span style="font-family: 'Times New Roman'"> </span></p>
+<p style="font-size: 10pt;margin: 0in" lang="en-US"><span style="font-family: 'Times New Roman'">void <span style="font-weight: bold">func_a</span>(void);</span></p>
+<p style="font-size: 10pt;margin: 0in" lang="en-US"><span style="font-family: 'Times New Roman'">void <span style="font-weight: bold">func_b</span>(void);</span></p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p style="font-size: 10pt;margin: 0in" lang="en-US"><span style="font-family: 'Times New Roman'"> </span></p>
+<p style="margin: 0in;font-size: 10.0pt"><span style="font-family: 'Times New Roman'"><span lang="en-US">dir2</span><span lang="zh-CN">的</span><span lang="en-US">test.cpp</span><span lang="zh-CN">和</span><span lang="en-US">test.h</span><span lang="zh-CN">中只定义了</span><span lang="en-US">func_a</span><span lang="zh-CN">：</span></span></p>
+
+<div style="direction: ltr">
+<table style="direction: ltr;border-collapse: collapse;border-style: solid;border-color: #A3A3A3;border-width: 1pt" border="1" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td style="border-style: solid;border-color: #A3A3A3;border-width: 1pt;vertical-align: top;width: 1.5763in;padding: 4pt 4pt 4pt 4pt">
+<p style="font-size: 10pt;margin: 0in" lang="en-US"><span style="font-family: 'Times New Roman'">#include &lt;iostream&gt;</span></p>
+<p style="font-size: 10pt;margin: 0in" lang="en-US"><span style="font-family: 'Times New Roman'">using namespace std;</span></p>
+<p style="font-size: 10pt;margin: 0in" lang="en-US"><span style="font-family: 'Times New Roman'"> </span></p>
+<p style="font-size: 10pt;margin: 0in" lang="en-US"><span style="font-family: 'Times New Roman'">#include "test.h"</span></p>
+<p style="font-size: 10pt;margin: 0in" lang="en-US"><span style="font-family: 'Times New Roman'"> </span></p>
+<p style="font-size: 10pt;margin: 0in" lang="en-US"><span style="font-family: 'Times New Roman'">void <span style="font-weight: bold">func_a</span>(void)</span></p>
+<p style="font-size: 10pt;margin: 0in" lang="en-US"><span style="font-family: 'Times New Roman'">{</span></p>
+<p style="font-size: 10pt;margin: 0in" lang="en-US"><span style="font-family: 'Times New Roman'">cout &lt;&lt; "a" &lt;&lt; endl;</span></p>
+<p style="font-size: 10pt;margin: 0in" lang="en-US"><span style="font-family: 'Times New Roman'">}</span></p>
+</td>
+<td style="border-style: solid;border-color: #A3A3A3;border-width: 1pt;vertical-align: top;width: 1.3388in;padding: 4pt 4pt 4pt 4pt">
+<p style="font-size: 10pt;margin: 0in" lang="en-US"><span style="font-family: 'Times New Roman'">#pragma once</span></p>
+<p style="font-size: 10pt;margin: 0in" lang="en-US"><span style="font-family: 'Times New Roman'"> </span></p>
+<p style="font-size: 10pt;margin: 0in" lang="en-US"><span style="font-family: 'Times New Roman'">void <span style="font-weight: bold">func_a</span>(void);</span></p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p style="font-size: 10pt;margin: 0in" lang="en-US"><span style="font-family: 'Times New Roman'"> </span></p>
+<p style="font-size: 10pt;margin: 0in"><span style="font-family: 'Times New Roman'"><span lang="en-US">main.cpp</span><span lang="zh-CN">调用了</span><span lang="en-US">func_a</span><span lang="zh-CN">和</span><span lang="en-US">func_b</span><span lang="zh-CN">：</span></span></p>
+<p style="font-size: 10pt;margin: 0in" lang="en-US"><span style="font-family: 'Times New Roman'">#include &lt;iostream&gt;</span></p>
+<p style="font-size: 10pt;margin: 0in" lang="en-US"><span style="font-family: 'Times New Roman'">using namespace std;</span></p>
+<p style="font-size: 10pt;margin: 0in" lang="en-US"><span style="font-family: 'Times New Roman'"> </span></p>
+<p style="font-size: 10pt;margin: 0in" lang="en-US"><span style="font-family: 'Times New Roman'">#include "test.h"</span></p>
+<p style="font-size: 10pt;margin: 0in" lang="en-US"><span style="font-family: 'Times New Roman'"> </span></p>
+<p style="font-size: 10pt;margin: 0in" lang="en-US"><span style="font-family: 'Times New Roman'">int main(void)</span></p>
+<p style="font-size: 10pt;margin: 0in" lang="en-US"><span style="font-family: 'Times New Roman'">{</span></p>
+<p style="font-size: 10pt;margin: 0in" lang="en-US"><span style="font-family: 'Times New Roman'"><span style="font-weight: bold">func_a</span>();</span></p>
+<p style="font-size: 10pt;margin: 0in" lang="en-US"><span style="font-family: 'Times New Roman'"><span style="font-weight: bold">func_b</span>();</span></p>
+<p style="font-size: 10pt;margin: 0in" lang="en-US"><span style="font-family: 'Times New Roman'"> </span></p>
+<p style="font-size: 10pt;margin: 0in" lang="en-US"><span style="font-family: 'Times New Roman'">return 0;</span></p>
+<p style="font-size: 10pt;margin: 0in" lang="en-US"><span style="font-family: 'Times New Roman'">}</span></p>
+<p style="font-size: 10pt;margin: 0in" lang="en-US"><span style="font-family: 'Times New Roman'"> </span></p>
+<p style="font-size: 10pt;margin: 0in"><span style="font-family: 'Times New Roman'"><span lang="zh-CN">我们列出下面几种方式编译</span><span lang="en-US">main</span><span lang="zh-CN">，</span><span lang="en-US">Makefile</span><span lang="zh-CN">和编译结果如下：</span></span></p>
+<p style="font-size: 10pt;margin: 0in"><span style="font-family: 'Times New Roman'"><span style="color: #00b050" lang="en-US">#dir1</span><span style="color: #00b050" lang="zh-CN">的静态库在前，</span><span style="color: #00b050" lang="en-US">dir2</span><span style="color: #00b050" lang="zh-CN">的静态库在后</span><span style="color: red" lang="zh-CN">（</span><span style="color: red" lang="en-US">ok</span><span style="color: red" lang="zh-CN">）</span></span></p>
+<p style="font-size: 10pt;margin: 0in" lang="en-US"><span style="font-family: 'Times New Roman'">main1: main.cpp</span></p>
+<p style="font-size: 10pt;margin: 0in" lang="en-US"><span style="font-family: 'Times New Roman'">g++ -g -Wall -I./dir1 -I./dir2 -o $@ $^ -L./dir1 -ltest -L./dir2
+-ltest</span></p>
+<p style="font-size: 10pt;margin: 0in" lang="en-US"><span style="font-family: 'Times New Roman'"> </span></p>
+<p style="font-size: 10pt;margin: 0in"><span style="font-family: 'Times New Roman'"><span style="color: #00b050" lang="en-US">#dir2</span><span style="color: #00b050" lang="zh-CN">的静态库在前，</span><span style="color: #00b050" lang="en-US">dir1</span><span style="color: #00b050" lang="zh-CN">的静态库在后</span><span style="color: blue" lang="zh-CN">（</span><span style="color: blue" lang="en-US">fail</span><span style="color: blue" lang="zh-CN">）</span></span></p>
+<p style="font-size: 10pt;margin: 0in" lang="en-US"><span style="font-family: 'Times New Roman'">main2: main.cpp</span></p>
+<p style="font-size: 10pt;margin: 0in" lang="en-US"><span style="font-family: 'Times New Roman'">g++ -g -Wall -I./dir1 -I./dir2 -o $@ $^ -L./dir2 -ltest -L./dir1
+-ltest</span></p>
+<p style="font-size: 10pt;color: blue;margin: 0in"><span style="font-family: 'Times New Roman'"><span lang="en-US">#</span><span lang="zh-CN">编译结果：</span><span lang="en-US">main.cpp:9: </span><span style="font-weight: bold" lang="en-US">undefined
+reference to</span><span lang="en-US"> `func_b()'</span></span></p>
+<p style="font-size: 10pt;margin: 0in" lang="en-US"><span style="font-family: 'Times New Roman'"> </span></p>
+<p style="font-size: 10pt;margin: 0in"><span style="font-family: 'Times New Roman'"><span style="color: #00b050" lang="en-US">#dir1</span><span style="color: #00b050" lang="zh-CN">的</span><span style="color: #00b050" lang="en-US">.o</span><span style="color: #00b050" lang="zh-CN">在前，</span><span style="color: #00b050" lang="en-US">dir2</span><span style="color: #00b050" lang="zh-CN">的</span><span style="color: #00b050" lang="en-US">.o</span><span style="color: #00b050" lang="zh-CN">在后</span><span style="color: blue" lang="zh-CN">（</span><span style="color: blue" lang="en-US">fail</span><span style="color: blue" lang="zh-CN">）</span></span></p>
+<p style="font-size: 10pt;margin: 0in" lang="en-US"><span style="font-family: 'Times New Roman'">main3: main.cpp</span></p>
+<p style="font-size: 10pt;margin: 0in" lang="en-US"><span style="font-family: 'Times New Roman'">g++ -g -Wall -I./dir1 -I./dir2 -o $@ $^ ./dir1/test.o ./dir2/test.o</span></p>
+<p style="font-size: 10pt;color: blue;margin: 0in"><span style="font-family: 'Times New Roman'"><span lang="en-US">#</span><span lang="zh-CN">编译结果：</span><span lang="en-US">dir2/test.cpp:6: </span><span style="font-weight: bold" lang="en-US">multiple
+definition</span><span lang="en-US"> of `func_a()'</span></span></p>
+<p style="font-size: 10pt;margin: 0in" lang="en-US"><span style="font-family: 'Times New Roman'"> </span></p>
+<p style="font-size: 10pt;margin: 0in"><span style="font-family: 'Times New Roman'"><span style="color: #00b050" lang="en-US">#dir2</span><span style="color: #00b050" lang="zh-CN">的</span><span style="color: #00b050" lang="en-US">.o</span><span style="color: #00b050" lang="zh-CN">在前，</span><span style="color: #00b050" lang="en-US">dir1</span><span style="color: #00b050" lang="zh-CN">的</span><span style="color: #00b050" lang="en-US">.o</span><span style="color: #00b050" lang="zh-CN">在后</span><span style="color: blue" lang="zh-CN">（</span><span style="color: blue" lang="en-US">fail</span><span style="color: blue" lang="zh-CN">）</span></span></p>
+<p style="font-size: 10pt;margin: 0in" lang="en-US"><span style="font-family: 'Times New Roman'">main4: main.cpp</span></p>
+<p style="font-size: 10pt;margin: 0in" lang="en-US"><span style="font-family: 'Times New Roman'">g++ -g -Wall -I./dir1 -I./dir2 -o $@ $^ ./dir2/test.o ./dir1/test.o</span></p>
+<p style="font-size: 10pt;color: blue;margin: 0in"><span style="font-family: 'Times New Roman'"><span lang="en-US">#</span><span lang="zh-CN">编译结果：</span><span lang="en-US">dir1/test.cpp:6: </span><span style="font-weight: bold" lang="en-US">multiple
+definition</span><span lang="en-US"> of `func_a()'</span></span></p>
+<p style="font-size: 10pt;margin: 0in" lang="en-US"><span style="font-family: 'Times New Roman'"> </span></p>
+<p style="font-size: 10pt;margin: 0in"><span style="font-family: 'Times New Roman'"><span style="color: #00b050" lang="en-US">#dir2</span><span style="color: #00b050" lang="zh-CN">的</span><span style="color: #00b050" lang="en-US">.o</span><span style="color: #00b050" lang="zh-CN">在前，</span><span style="color: #00b050" lang="en-US">dir1</span><span style="color: #00b050" lang="zh-CN">的静态库在后</span><span style="color: blue" lang="zh-CN">（</span><span style="color: blue" lang="en-US">fail</span><span style="color: blue" lang="zh-CN">）</span></span></p>
+<p style="font-size: 10pt;margin: 0in" lang="en-US"><span style="font-family: 'Times New Roman'">main5: main.cpp</span></p>
+<p style="font-size: 10pt;margin: 0in" lang="en-US"><span style="font-family: 'Times New Roman'">g++ -g -Wall -I./dir1 -I./dir2 -o $@ $^ ./dir2/test.o -L./dir1
+-ltest </span></p>
+<p style="font-size: 10pt;color: blue;margin: 0in"><span style="font-family: 'Times New Roman'"><span lang="en-US">#</span><span lang="zh-CN">编译结果：</span><span lang="en-US">dir1/test.cpp:6: </span><span style="font-weight: bold" lang="en-US">multiple
+definition</span><span lang="en-US"> of `func_a()'</span></span></p>
+<p style="font-size: 10pt;margin: 0in" lang="en-US"><span style="font-family: 'Times New Roman'"> </span></p>
+<p style="font-size: 10pt;margin: 0in"><span style="font-family: 'Times New Roman'"><span style="color: #00b050" lang="en-US">#dir1</span><span style="color: #00b050" lang="zh-CN">的</span><span style="color: #00b050" lang="en-US">.o</span><span style="color: #00b050" lang="zh-CN">在前，</span><span style="color: #00b050" lang="en-US">dir2</span><span style="color: #00b050" lang="zh-CN">的静态库在后</span><span style="color: red" lang="zh-CN">（</span><span style="color: red" lang="en-US">ok</span><span style="color: red" lang="zh-CN">）</span></span></p>
+<p style="font-size: 10pt;margin: 0in" lang="en-US"><span style="font-family: 'Times New Roman'">main6: main.cpp</span></p>
+<p style="font-size: 10pt;margin: 0in" lang="en-US"><span style="font-family: 'Times New Roman'">g++ -g -Wall -I./dir1 -I./dir2 -o $@ $^ ./dir1/test.o -L./dir2
+-ltest </span></p>
+<p style="font-size: 10pt;margin: 0in" lang="en-US"><span style="font-family: 'Times New Roman'"> </span></p>
+<p style="font-size: 10pt;margin: 0in" lang="en-US"><span style="font-family: 'Times New Roman'">clean:</span></p>
+<p style="font-size: 10pt;margin: 0in" lang="en-US"><span style="font-family: 'Times New Roman'">rm -f main[0-9]</span></p>
+<p style="font-size: 10pt;margin: 0in" lang="en-US"><span style="font-family: 'Times New Roman'"> </span></p>
+<p style="font-weight: bold;font-size: 10pt;margin: 0in"><span style="font-family: 'Times New Roman'">原因好像是这样的：</span></p>
+<p style="font-size: 10pt;color: #c00000;margin: 0in"><span style="font-family: 'Times New Roman'"><span lang="zh-CN">编译器链接多个</span><span lang="en-US">.o</span><span lang="zh-CN">时，没有顺序的概念。</span></span></p>
+<p style="font-size: 10pt;color: #c00000;margin: 0in"><span style="font-family: 'Times New Roman'"><span lang="zh-CN">但是链接</span><span lang="en-US">.a</span><span lang="zh-CN">时，为了节省工作量，</span></span></p>
+<p style="font-size: 10pt;margin: 0in"><span style="font-family: 'Times New Roman'"><span style="color: #c00000" lang="zh-CN">（</span><span style="color: #c00000" lang="en-US">1</span><span style="color: #c00000" lang="zh-CN">）只链接需要用到的</span><span lang="zh-CN">（摘抄一段说明：“传统的</span><span lang="en-US">Unix</span><span lang="zh-CN">编译环境下，静态库的加载是顺序搜索一遍，遇到没链接的函数就记下，如果这个函数在后面的库或</span><span lang="en-US">obj</span><span lang="zh-CN">中出现，链接器就会把这个函数所在的</span><span lang="en-US">obj</span><span lang="zh-CN">链接过去</span><span lang="en-US">,</span><span lang="zh-CN">，不包含未链接函数的</span><span lang="en-US">obj</span><span lang="zh-CN">就会被忽略过去</span><span lang="en-US">(</span><span lang="zh-CN">静态库也只是</span><span lang="en-US">obj</span><span lang="zh-CN">的简单打包而已</span><span lang="en-US">)</span><span lang="zh-CN">。于是</span><span lang="en-US">, </span><span lang="zh-CN">“</span><span lang="en-US">-lc</span><span lang="zh-CN">”的时候</span><span lang="en-US">, </span><span lang="zh-CN">因为那两个函数在</span><span lang="en-US">main.c</span><span lang="zh-CN">中都没有被调用，链接器就把</span><span lang="en-US">a.o</span><span lang="zh-CN">略过去了，“</span><span lang="en-US">-ld</span><span lang="zh-CN">”的时候虽然有了</span><span lang="en-US">a.o</span><span lang="zh-CN">中函数的调用，但链接器已经把它给略过去</span><span lang="en-US">, </span><span lang="zh-CN">找不到了。）；</span></span></p>
+<p style="font-size: 10pt;color: #c00000;margin: 0in"><span style="font-family: 'Times New Roman'"><span lang="zh-CN">（</span><span lang="en-US">2</span><span lang="zh-CN">）相同名字的</span><span lang="en-US">.o</span><span lang="zh-CN">只用第一次出现的。</span></span></p>
