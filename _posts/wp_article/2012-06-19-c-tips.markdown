@@ -1,0 +1,31 @@
+---
+author: admin
+comments: true
+date: 2012-06-19 13:05:28+00:00
+layout: post
+slug: c-tips
+title: C++ tips
+wordpress_id: 417
+categories:
+- 程序设计
+---
+
+1.在switch语句中，default放在最前也不会被执行，都不满足才执行，但是如果没有break，会继续往下执行。
+
+2.
+
+#define MAX_LEN 1
+
+sizeof(MAX_LEN)
+
+值为4，当作了一个整数。
+
+3.
+
+在64位机
+
+uint64_t ddwLen = 0xFFFF000000000000;
+
+不会有问题，
+
+在32位会编译出错。
