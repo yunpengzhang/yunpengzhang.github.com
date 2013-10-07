@@ -1,7 +1,7 @@
 ---
 layout: nil
-title : RSS
-group : showpage
+title : Rss
+group : navigation
 ---
 
 <?xml version="1.0" encoding="UTF-8" ?>

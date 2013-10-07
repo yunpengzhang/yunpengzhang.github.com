@@ -1,10 +1,13 @@
 ---
 layout: page
-title: "bloglog"
+title: "SiteLog"
 description: "网站日志"
-group: showpage
+group: navigation
 ---
 {% include JB/setup %}
+
+##2013-10-06
+迁移博客，使用jekyll引擎，采用简洁风格，更关注写作
 
 ##2013-06-30
 参考添加插件**Dewplayer**
