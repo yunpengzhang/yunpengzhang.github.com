@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Yunpeng's personal site
+title: Yunpeng and his firends
 tagline: Stay Hungry Stay Foolish
 ---
 {% include JB/setup %}
