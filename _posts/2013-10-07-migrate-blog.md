@@ -3,7 +3,11 @@ layout: post
 title: "迁移博客"
 description: ""
 category: "blog"
-tags: [blog ,jekyll ,markdown ,git]
+tags:
+- blog
+- jekyll
+- markdown
+- git
 ---
 {% include JB/setup %}
 
