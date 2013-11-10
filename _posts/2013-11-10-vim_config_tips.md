@@ -24,5 +24,7 @@ tags:
 原因:使用`verbose imap <c-n>` 查看是由于什么设置所致，发现是supertab插件导致，删除解决。
 
 
+### 参考
+[把vim打造成IDE](http://blog.csdn.net/fbfsber008/article/details/7055842)
 ### 附：vimrc文件
 <script src="https://gist.github.com/yunpengzhang/33ea66a075bc853fe2ec.js"></script>
