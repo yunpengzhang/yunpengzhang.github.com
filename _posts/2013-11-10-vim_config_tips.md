@@ -2,7 +2,7 @@
 layout: post
 title: "vim的IDE配置和vim tips"
 description: ""
-category: "软件配置"
+category: "vim"
 tags: 
 - vim
 - IDE
@@ -22,6 +22,9 @@ tags:
 ### vim补全时发现候选菜单的上下选择ctrl-p, ctrl-n相反
 
 原因:使用`verbose imap <c-n>` 查看是由于什么设置所致，发现是supertab插件导致，删除解决。
+
+    #include<iostream>
+    int main
 
 
 ### 参考
