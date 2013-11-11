@@ -3,9 +3,7 @@ layout: post
 title: "github帐号获得ripple币"
 description: ""
 category: "生活"
-tags: 
-- github
-- ripple
+tags: [github, ripple]
 ---
 {% include JB/setup %}
 
