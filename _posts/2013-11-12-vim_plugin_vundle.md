@@ -25,10 +25,14 @@ vundle是管理vim插件的一个插件。是模仿ruby语言的bundle来实现�
 每次重装linux系统时也希望有这样的工具，把所有需要都软件都下载装好。
 
 ##如何安装，使用vundle？
+
 1.安装git软件。
+
 2.执行命令安装vundle。
     `git clone https://github.com/gmarik/vundle.git ~/.vim/bundle/vundle`
+    
 3.配置vimrc文件，记录要安装的插件名字
+
 
 ---
 
@@ -64,19 +68,19 @@ vundle是管理vim插件的一个插件。是模仿ruby语言的bundle来实现�
 ---
 
 
-4.在vim的normal状态下输入命令
-`:BundleInstall`
+4. 在vim的normal状态下输入命令
+    `:BundleInstall`
+
 
 从github上下载配置的插件。由于网络原因，下载的速度可能比较慢，第一次要耐心等待。而且下载完成后会有提示，可以从log中查看出来。
 
 更新插件命令
-`:BundleInstall!`
+    `:BundleInstall!`
 
 删除插件
-`:BundleClean`
-    
+    `:BundleClean`
 查找插件
-`:BundleSearch foo`
+   `:BundleSearch foo`
 
 更多使用vundle都方法可以参考·h vundle·来查看，不过主要是管理插件，平时用的几率不高，上面的这些就够用了。
 
