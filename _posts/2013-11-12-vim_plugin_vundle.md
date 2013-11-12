@@ -29,41 +29,41 @@ vundle是管理vim插件的一个插件。是模仿ruby语言的bundle来实现�
 2. 执行命令安装vundle。
     git clone https://github.com/gmarik/vundle.git ~/.vim/bundle/vundle
 3. 配置vimrc文件，记录要安装的插件名字
-    set nocompatible               " be iMproved 确保是vim而不是vi
-    filetype off                   " required!   必需
-    
-    set rtp+=~/.vim/vundle.git/   "保留
-    call vundle#rc()              "保留
-    
-    " let Vundle manage Vundle
-    Bundle 'gmarik/vundle'        "vundle安装vundle插件
-    
-    " My Bundles here:             下面都是插件的配置，格式是 Bundle ‘插件名称’
-    "
-    " original repos on github
-    Bundle 'tpope/vim-fugitive'
-    Bundle 'Lokaltog/vim-easymotion'
-    Bundle 'rstacruz/sparkup', {'rtp': 'vim/'}
-    " vim-scripts repos
-    Bundle 'L9'
-    Bundle 'FuzzyFinder'
-    Bundle 'rails.vim'
-    " non github repos
-    Bundle 'git://git.wincent.com/command-t.git'
-    " git repos on your local machine (ie. when working on your own plugin)
-    Bundle 'file:///Users/gmarik/path/to/plugin'
-    " ...
-    
-    filetype plugin indent on     " required!
-    " or 
-    " filetype plugin on          " to not use the indentation settings set by plugins
+	set nocompatible               " be iMproved 确保是vim而不是vi
+	filetype off                   " required!   必需
+	
+	set rtp+=~/.vim/vundle.git/   "保留
+	call vundle#rc()              "保留
+	
+	" let Vundle manage Vundle
+	Bundle 'gmarik/vundle'        "vundle安装vundle插件
+	
+	" My Bundles here:             下面都是插件的配置，格式是 Bundle ‘插件名称’
+	"
+	" original repos on github
+	Bundle 'tpope/vim-fugitive'
+	Bundle 'Lokaltog/vim-easymotion'
+	Bundle 'rstacruz/sparkup', {'rtp': 'vim/'}
+	" vim-scripts repos
+	Bundle 'L9'
+	Bundle 'FuzzyFinder'
+	Bundle 'rails.vim'
+	" non github repos
+	Bundle 'git://git.wincent.com/command-t.git'
+	" git repos on your local machine (ie. when working on your own plugin)
+	Bundle 'file:///Users/gmarik/path/to/plugin'
+	" ...
+	
+	filetype plugin indent on     " required!
+	" or 
+	" filetype plugin on          " to not use the indentation settings set by plugins
 
 4. 在vim的normal状态下输入命令
     :BundleInstall
 从github上下载配置的插件。由于网络原因，下载的速度可能比较慢，第一次要耐心等待。而且下载完成后会有提示，可以从log中查看出来。
 
 更新插件命令
-    :BundleInstall!            
+    :BundleInstall!
 
 删除插件
     :BundleClean
