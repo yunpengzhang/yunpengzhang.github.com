@@ -68,7 +68,7 @@ vundle是管理vim插件的一个插件。是模仿ruby语言的bundle来实现�
 ---
 
 
-4. 在vim的normal状态下输入命令
+4.在vim的normal状态下输入命令
     `:BundleInstall`
 
 
