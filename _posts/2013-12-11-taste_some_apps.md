@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "几款app都体验报告"
+title: "几款app的体验报告"
 description: ""
 category: "软件"
 tags: [app,体验,知乎,天天酷跑,游戏,微视]
