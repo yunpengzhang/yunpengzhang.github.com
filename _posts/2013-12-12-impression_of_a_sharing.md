@@ -3,10 +3,7 @@ layout: post
 title: "一场分享中的感悟"
 description: ""
 category: "感悟"
-tags: 
-- 感悟
-- 游戏
-- 情商
+tags: [感悟, 游戏, 情商]
 ---
 {% include JB/setup %}
 
