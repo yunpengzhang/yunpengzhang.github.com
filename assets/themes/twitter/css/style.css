@@ -4,8 +4,8 @@ html, body {
 }
 body {
     padding-top: 40px;
-    font-family: "Georgia", sans-serif, "Microsoft YaHei",sans-serif;
-    font-size: 15px;
+    font-family:  "Microsoft YaHei", "Georgia",sans-serif;
+    font-size: 16px;
 }
 .container > footer p {
   text-align: center; /* center align it with the container */
@@ -85,12 +85,13 @@ h3, h4, h5, h6 {
     margin-bottom: 0.5em;
     line-height: 1.3;
 }
+
 p {
     margin-top: 5px;
     margin-bottom: 0;
     line-height: 150%;
     margin-top: 0;
     margin-bottom: 5px;
-    font-family: "Georgia", sans-serif, "Microsoft YaHei",sans-serif;
-    font-size: 15px;
+    font-family: "Microsoft YaHei","Georgia", sans-serif;
+    font-size: 16px;
 }
