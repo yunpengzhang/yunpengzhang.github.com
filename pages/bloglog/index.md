@@ -8,6 +8,7 @@ group: navigation
 
 ##2013-10-06
 迁移博客，使用jekyll引擎，采用简洁风格，更关注写作
+参考博客[用GitHub + Jekyll搭建博客 -- 以Ubuntu为例](http://trefoil.github.io/2013/10/05/jekyll.html)
 
 ##2013-06-30
 参考添加插件**Dewplayer**
