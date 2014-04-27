@@ -3,7 +3,9 @@ html, body {
   background-color: #eee;
 }
 body {
-  padding-top: 40px; /* 40px to make the container go all the way to the bottom of the topbar */
+    padding-top: 40px;
+    font-family: "Georgia", sans-serif, "Microsoft YaHei",sans-serif;
+    font-size: 15px;
 }
 .container > footer p {
   text-align: center; /* center align it with the container */
@@ -67,4 +69,28 @@ body {
 	background:#57A957;
 	border:1px solid #4C964D;
 	color:#FFF;
+}
+
+h1 {
+    font-size: 2.4em;
+    color:#14556B;
+}
+h2 {
+    font-size: 1.5em;
+    margin-bottom: 5px;
+}
+h3, h4, h5, h6 {
+    font-family: sans-serif;
+    margin-top: 1.2em;
+    margin-bottom: 0.5em;
+    line-height: 1.3;
+}
+p {
+    margin-top: 5px;
+    margin-bottom: 0;
+    line-height: 150%;
+    margin-top: 0;
+    margin-bottom: 5px;
+    font-family: "Georgia", sans-serif, "Microsoft YaHei",sans-serif;
+    font-size: 15px;
 }
