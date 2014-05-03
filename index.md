@@ -14,7 +14,7 @@ tagline: Stay Hungry Stay Foolish
 {% endfor %}
 
 <hr />
-<h2>以往文章</h2>
+<h2>最近文章</h2>
 <br />
 
 <ul>
