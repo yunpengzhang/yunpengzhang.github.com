@@ -2,8 +2,13 @@
 layout: post
 title: "安装YouCompleteMe插件"
 description: ""
-category: ""
-tags: []
+category: "工具使用"
+tags: 
+- vim
+- youcompleteme
+- vim插件
+- clang
+
 ---
 {% include JB/setup %}
 
