@@ -31,6 +31,7 @@ scp压缩传输
 	sys 0m5.960s
 
 ssh压缩传输
+
 	time tar cvzf - tgame_bak | ssh tgame@10.12.190.90 "cd /data/tgame/test; tar xvzf -"
 	real   2m47.822s
 	user   2m41.662s
