@@ -14,7 +14,7 @@ title : 云鹏和他的朋友们
 tagline: Stay Hungry Stay Foolish
 author :
   name : yunpeng
-  email : yunpengzhang@126.com
+  email : 
   github : 
   twitter : 
   feedburner : 
@@ -72,10 +72,10 @@ JB :
   # Some JB helpers refer to these paths; change them here if needed.
   #
   archive_path: /archive.html
-  categories_path : /categories.html
-  tags_path : /tags.html
-  atom_path : /atom.xml
-  rss_path : /rss.xml
+  #categories_path : /categories.html
+  #tags_path : /tags.html
+  #atom_path : /atom.xml
+  #rss_path : /rss.xml
 
   # Settings for comments helper
   # Set 'provider' to the comment provider you want to use.
