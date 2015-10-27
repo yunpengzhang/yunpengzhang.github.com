@@ -20,10 +20,4 @@ group: navigation
 
 如果想联系我，可以留言。
 
-##target：
-
-- 打理一个博客
-- 做一款开源软件
-- 写本书
-
 {% include JB/comments %}
