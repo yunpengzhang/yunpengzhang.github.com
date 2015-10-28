@@ -1,5 +1,5 @@
 ---
-layout: page
+layout: nil
 title: "About"
 description: ""
 comments: true
