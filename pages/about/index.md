@@ -1,9 +1,9 @@
 ---
 layout: nil
-title: "About"
+title: "about"
 description: ""
 comments: true
-group: navigation
+group: navigation_about
 ---
 {% include JB/setup %}
 
