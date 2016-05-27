@@ -2,7 +2,7 @@
 layout: page
 title: "SiteLog"
 description: "网站日志"
-group: navigation
+group: navigation_
 ---
 {% include JB/setup %}
 

@@ -1,7 +1,7 @@
 ---
-layout: nil
+layout: page
 title : Rss
-group : navigation
+group : navigation_
 ---
 
 <?xml version="1.0" encoding="UTF-8" ?>
