@@ -10,7 +10,9 @@ tagline: Stay Hungry Stay Foolish
 {% for post in site.posts limit: 1  %}
 <h3><a href="{{ post.url }}">{{ post.title }}</a></h3>
 <div class="list"><time>{{ post.date | date:"%Y年%m月%d日" }}</time></div>
-<p>{{ post.content }} <a class="btn" href="{{ post.url }}">查看评论</a></p>
+<p>{{ post.content }} 
+<!-- a class="btn" href="{{ post.url }}">查看评论</a -->
+</p>
 {% endfor %}
 
 <hr />
